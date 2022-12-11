@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.models.fields.related import ForeignKey, OneToOneField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class UserManager(BaseUserManager):
     def create_user(self, first_name, last_name, username, email, password=None):
@@ -75,6 +78,38 @@ class User(AbstractBaseUser):
         return True
 
 
-# class UserProfile(models.Model):
-#     user = OneToONeField(User, on_delete=models.CASCADE, blank=True, null=True)
+class UserProfile(models.Model):
+    user = OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='users/profile_pictures', blank=True, null=True)
+    cover_photo = models.ImageField(upload_to='users/cover_photos', blank=True, null=True)
+    address_line_1 = models.CharField(max_length=50, blank=True, null=True)
+    address_line_2 = models.CharField(max_length=50, blank=True, null=True)
+    country = models.CharField(max_length=15, blank=True, null=True)
+    state = models.CharField(max_length=15, blank=True, null=True)
+    city = models.CharField(max_length=15, blank=True, null=True)
+    pin_code = models.CharField(max_length=6, blank=True, null=True)
+    latitude = models.CharField(max_length=20, blank=True, null=True)
+    longitude = models.CharField(max_length=20, blank=True, null=True)
+    created_at= models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.email
+
+@receiver(post_save, sender=User)
+def post_save_create_profile_receiver(sender, instance, created, **kwargs):
+    print(created)
+    if created:
+        UserProfile.objects.create(user=instance)
+        print('user profile is created')
+    else:
+        try:
+            profile = UserProfile.objects.get(user=instance)
+            profile.save()
+        except:
+            # Create the profile if not exist
+            UserProfile.objects.create(user=instance)
+            print('Profile was not exist, but I create one')
+        print('user is updasted')
+
     
