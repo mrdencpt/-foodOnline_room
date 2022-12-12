@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http.response import HttpResponse
 from .forms import UserForm
 
@@ -9,7 +9,8 @@ def registerUser(request):
         print(request.POST)
         form = UserForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
+            return redirect('registerUser')
     else:
         form = UserForm()
     context = {
