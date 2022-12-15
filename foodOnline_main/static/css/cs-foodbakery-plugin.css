@@ -621,7 +621,7 @@ ul.sub-nav li a { line-height: 20px; }
 .upload-file button[type='button'] { background: none; color: #f97456; font-size: 14px; line-height: 22px; font-family: 'Karla', sans-serif; -webkit-transition: all 0.3s ease-in-out; -moz-transition: all 0.3s ease-in-out; transition: all 0.3s ease-in-out; border: 1px solid #f97456; border-radius: 2px; padding: 7px 30px; }
 .upload-file button[type='button'] span label { margin: 0; cursor: pointer; }
 .upload-file input[type='file']:focus + label, .upload-file input[type='file'].has-focus + label, .upload-file input[type='file'] + label:hover { background-color: #f97456; color: #fff; }
-.btn-submit, .payment-holder input[type="submit"], .add-menu-item-extra, .dashboard-nav.sub-nav a { line-height: 28px; position: relative; background: #d4382d; border: 0 none; border-radius: 2px; color: #fff; display: inline-block; font-family: "Karla", sans-serif; font-size: 13px; font-weight: 400; margin: 0; outline: none; padding: 2px 25px; text-decoration: none; text-transform: capitalize; }
+.btn-submit, .payment-holder input[type="submit"], .add-menu-item-extra, .dashboard-nav.sub-nav a { line-height: 28px; position: relative; background: #d24a4a; border: 0 none; border-radius: 20px; color: #fff; display: inline-block; font-family: "Karla", sans-serif; font-size: 13px; font-weight: 400; margin: 0; outline: none; padding: 2px 25px; text-decoration: none; text-transform: capitalize; }
 .user-dashboard .dashboard-nav.sub-nav a { color: #fff; }
 .dashboard-nav.sub-nav a:hover { color: #fff !important; }
 .add-menu-item-extra:hover, .add-menu-item-extra:focus { color: #fff; }
