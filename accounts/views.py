@@ -80,10 +80,15 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             messages.success(request, 'You are now logged in')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Login ไม่ผ่าน !')
+            return redirect('login')
     return render(request, 'accounts/login.html')
 
 def logout(request):
     return
 
 def dashboard(request):
-    return
+    return render(request, 'accounts/dashboard.html')
+    
