@@ -77,17 +77,20 @@ def login(request):
         password = request.POST['password']
 
         user = auth.authenticate(email=email, password=password)
+
         if user is not None:
             auth.login(request, user)
-            messages.success(request, 'You are now logged in')
+            messages.success(request, 'ล๊อคอิน สำเร็จ. ')
             return redirect('dashboard')
         else:
-            messages.error(request, 'Login ไม่ผ่าน !')
+            messages.error(request, 'ล๊อกอิน ไม่สำเร็จ! ')
             return redirect('login')
     return render(request, 'accounts/login.html')
 
 def logout(request):
-    return
+    auth.logout(request)
+    messages.info(request, 'คุณล๊อกเอ้าท์ สำเร็จ')
+    return redirect('login')
 
 def dashboard(request):
     return render(request, 'accounts/dashboard.html')
