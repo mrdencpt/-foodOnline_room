@@ -89,7 +89,7 @@ def login(request):
 
 def logout(request):
     auth.logout(request)
-    messages.info(request, 'คุณล๊อกเอ้าท์ สำเร็จ')
+    messages.warning(request, 'ล๊อกเอ้าท์ สำเร็จ')
     return redirect('login')
 
 def dashboard(request):
