@@ -44,6 +44,7 @@ def registerUser(request):
 
             # Send  verification email
             send_verification_email(request, user)
+            
             messages.success(request, 'Your account has been registered successfully')
             return redirect('registerUser')
         else:
@@ -97,6 +98,10 @@ def registerVendor(request):
 
     return render(request, 'accounts/registerVendor.html', context)
     
+
+def activate(request, uidb64, token):
+    # Activate the user by setting the is_active status to True
+    return
 
 def login(request):
     if request.user.is_authenticated:
