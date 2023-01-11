@@ -140,3 +140,10 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+# Email configuration
+EMAIL_HOST = config('EMAIL_HOST') # จะได้ค่าเป็น String
+EMAIL_PORT = config('EMAIL_PORT', cast=int) # cast=int เพื่อเป็นตัวเลข ไม่ใช่ข้อความ
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True

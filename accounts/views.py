@@ -5,9 +5,29 @@ from vendor.forms import VendorForm
 
 from .models import User, UserProfile
 from django.contrib import messages, auth
-# Create your views here.
+from .utils import detectUser, send_verification_email
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+from django.core.exceptions import PermissionDenied
+
+# Restrict the vendor from accessing the customer page
+def check_role_vendor(user):
+    if user.role == 1:
+        return True
+    else:
+        raise PermissionDenied
+
+# Restrict the customer from accessing the vendor page
+def check_role_customer(user):
+    if user.role == 2:
+        return True
+    else:
+        raise PermissionDenied
 
 def registerUser(request):
+    if request.user.is_authenticated:
+        messages.warning(request, 'คุณได้ ล๊อกอิน ไว้แล้ว!')
+        return redirect('dashboard')
     if request.method == 'POST':
         # print(request.POST) True False
         form = UserForm(request.POST)
@@ -21,6 +41,9 @@ def registerUser(request):
             user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
             user.role = User.CUSTOMER
             user.save()
+
+            # Send  verification email
+            send_verification_email(request, user)
             messages.success(request, 'Your account has been registered successfully')
             return redirect('registerUser')
         else:
@@ -36,6 +59,9 @@ def registerUser(request):
     
 
 def registerVendor(request):
+    if request.user.is_authenticated:
+        messages.warning(request, 'คุณได้ ล๊อกอิน ไว้แล้ว!')
+        return redirect('dashboard')
     if request.method == "POST":
         # store the data adn create the user
         form = UserForm(request.POST)
@@ -71,8 +97,12 @@ def registerVendor(request):
 
     return render(request, 'accounts/registerVendor.html', context)
     
+
 def login(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request, 'คุณได้ ล๊อกอิน ไว้แล้ว!')
+        return redirect('myAccount')
+    elif request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
 
@@ -80,8 +110,8 @@ def login(request):
 
         if user is not None:
             auth.login(request, user)
-            messages.success(request, 'ล๊อคอิน สำเร็จ. ')
-            return redirect('dashboard')
+            messages.success(request, 'ล๊อกอิน สำเร็จ. ')
+            return redirect('myAccount')
         else:
             messages.error(request, 'ล๊อกอิน ไม่สำเร็จ! ')
             return redirect('login')
@@ -92,6 +122,19 @@ def logout(request):
     messages.warning(request, 'ล๊อกเอ้าท์ สำเร็จ')
     return redirect('login')
 
-def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+@login_required(login_url='login')
+def myAccount(request):
+    user = request.user
+    redirectUrl = detectUser(user)
+    return redirect(redirectUrl)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_customer)
+def custDashboard(request):
+    return render(request, 'accounts/custDashboard.html')
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def vendorDashboard(request):
+    return render(request, 'accounts/vendorDashboard.html')
     
